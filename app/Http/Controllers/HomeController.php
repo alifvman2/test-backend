@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use carbon;
+use Carbon;
 
 class HomeController extends Controller
 {
@@ -117,9 +117,26 @@ class HomeController extends Controller
     public function jawab_3(Request $request)
     {
 
-        $hari = date_format(DDDD, carbon($request->tanggal));
+        // $hari = Carbon($request->tanggal);
+        $hasil = $request->barang * $request->qty;
 
-        return $hari;
+        if ($request->barang == 99900) {
+            if ($request->qty >= 50) {
+                $disc = $hasil * 5 / 100;
+                $total = $hasil - $disc;
+            }else{
+                $total = $hasil;
+            }
+        }else{
+            if ($request->qty >= 100) {
+                $disc = $hasil * 10 / 100;
+                $total = $hasil - $disc;
+            }else{
+                $total = $hasil;
+            }
+        }
+
+        return $total;
 
     }
 
