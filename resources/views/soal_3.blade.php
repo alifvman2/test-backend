@@ -8,7 +8,7 @@
 <body>
 
 	<div align="center" style="padding-top: 100px;">
-		<form action="{{ route('jawab_3') }}" method="post">
+		<form action="{{ route('jawab_3') }}" method="post" style="padding-bottom: 50px;">
 			@csrf
 			<div style="padding-bottom: 20px;">
 				<label>Barang</label>
@@ -29,29 +29,8 @@
 			</div>
 			<button type="submit">Submit</button>
 		</form>
+		<a href="{{ route('index') }}" style="padding-left: 50px; ">Home</a>
 	</div>
-
-	<script type="text/javascript">
-		
-		function pilih(val) {
-				
-			var test = getElementsById('harga');
-
-			console.log(test);
-			if (val == 'A') {
-
-				console.log(val)
-
-				getElementById('harga').value('Rp. 99.900')
-			}else{
-
-				getElementById('harga').value('Rp. 49.900')
-
-			}
-
-		}
-
-	</script>
 
 </body>
 </html>

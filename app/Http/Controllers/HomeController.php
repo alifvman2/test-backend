@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Carbon;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -92,6 +92,32 @@ class HomeController extends Controller
 
     }
 
+    public function soal_2()
+    {
+
+        $array = [9, 3, 7, 8, 2, 6, 1, 4, 10, 2, 2, 3];
+
+        // Jumlah elemen dalam array
+        $length = count($array);
+
+        // Implementasi pengurutan menggunakan Bubble Sort
+        for ($i = 0; $i < $length - 1; $i++) {
+            for ($j = 0; $j < $length - $i - 1; $j++) {
+                // Jika elemen saat ini lebih besar dari elemen berikutnya, tukar
+                if ($array[$j] > $array[$j + 1]) {
+                    $temp = $array[$j];
+                    $array[$j] = $array[$j + 1];
+                    $array[$j + 1] = $temp;
+                }
+            }
+        }
+
+        return view('hasil_2')->with([
+            'data'  => $array,
+        ]);
+
+    }
+
     public function soal_3()
     {
 
@@ -102,28 +128,69 @@ class HomeController extends Controller
     public function jawab_1(Request $request)
     {
 
-        $alfa = array($request->soal);
+        $inputString = $request->soal; // Ganti 'input_string' sesuai dengan nama input yang digunakan di form
 
+        // Panggil fungsi untuk menghasilkan output
+        $outputString = $this->generateOutput($inputString);
 
+        // Tampilkan output atau lakukan sesuai kebutuhan aplikasi Anda
 
-        return substr_count("", $request->soal);
+        return view('hasil_1')->with([
+            'data' =>  $outputString,
+        ]);
 
-        dd($alfa);
+    }
 
-        return view('jawab_1');
+    private function generateOutput($inputString)
+    {
+
+        $hasil = '';
+        $charArray = str_split($inputString);
+
+        // Menghapus karakter yang duplikat
+        $uniqueChars = array_unique($charArray);
+        
+        // Menggabungkan array karakter unik kembali menjadi string
+        $outputString = implode('', $uniqueChars);
+
+        $arrayPerKarakter = str_split($outputString);
+
+        $charCounts = count_chars($inputString, 1);
+
+        // Menampilkan hasil
+        foreach ($arrayPerKarakter as $char) {
+            $count = isset($charCounts[ord($char)]) ? $charCounts[ord($char)] : 0;
+            if ($count == 1) {
+                $count = "";
+            };
+            $hasil .= "$char"."$count";
+        }
+
+        return $hasil;
 
     }
 
     public function jawab_3(Request $request)
     {
 
-        // $hari = Carbon($request->tanggal);
+        $carbonDate = Carbon::parse($request->tanggal);
+
+        $dayOfWeek = $carbonDate->format('l');
+
         $hasil = $request->barang * $request->qty;
+
+        $discon = '';
 
         if ($request->barang == 99900) {
             if ($request->qty >= 50) {
+                $discon = '5%';
                 $disc = $hasil * 5 / 100;
                 $total = $hasil - $disc;
+                if ($dayOfWeek == 'Monday' || 'Thursday') {
+                    $discon = '5% + 10%';
+                    $daydisc = $total * 10 / 100;;
+                    $total = $total - $daydisc;
+                }
             }else{
                 $total = $hasil;
             }
@@ -131,12 +198,25 @@ class HomeController extends Controller
             if ($request->qty >= 100) {
                 $disc = $hasil * 10 / 100;
                 $total = $hasil - $disc;
+                $discon = '10%';
+                if ($dayOfWeek == 'Friday') {
+                    $discon = '10% + 5%';
+                    $daydisc = $total * 5 / 100;;
+                    $total = $total - $daydisc;
+                }
             }else{
                 $total = $hasil;
             }
         }
 
-        return $total;
+        return view('hasil_3')->with([
+            'data'  => $total,
+            'harga' => $request->barang,
+            'hari'  => $dayOfWeek,
+            'total' => $hasil,
+            'qty'   => $request->qty,
+            'discon'=> $discon,
+        ]);
 
     }
 

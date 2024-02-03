@@ -8,11 +8,12 @@
 <body>
 
 	<div align="center" style="padding-top: 100px;">
-		<form action="{{ route('jawab_1') }}" method="post">
+		<form action="{{ route('jawab_1') }}" method="post" style="padding-bottom: 50px;">
 			@csrf
 			<input type="text" name="soal">
 			<button type="submit">Submit</button>
 		</form>
+		<a href="{{ route('index') }}" style="padding-left: 50px; ">Home</a>
 	</div>
 
 </body>
